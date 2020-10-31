@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 app = Flask(__name__)
 
-@app.route('/submit', methods=('POST'))
+
+@app.route('/submit', methods=('POST',))
 def submitRequest():
     """
     """
@@ -19,6 +20,7 @@ def submitRequest():
         #     conn = get_db_connection()
         #     addInitiator(conn, email)
 
+
 @app.route('/download/<int:id>', methods=('GET',))
 def download(requestId):
     """
@@ -31,4 +33,3 @@ def download(requestId):
     # flash('"{}" was successfully deleted!'.format(post['title']))
     # return redirect(url_for('index'))
     return None
-
