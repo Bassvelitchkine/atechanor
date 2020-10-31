@@ -7,16 +7,17 @@ def submitRequest():
     """
     if request.method == 'POST':
         email = request.form['email']
-        profilesList = request.form['profilesList']
-
-        if not (email or profilesList):
-            if not email:
-                flash('Email is required!')
-            if not profilesList:
-                flash("A list of profiles is required!")
-        else:
-            conn = get_db_connection()
-            addInitiator(conn, email)
+        # profilesList = request.form['profilesList']
+        print(email)
+        return "Success"
+        # if not (email or profilesList):
+        #     if not email:
+        #         flash('Email is required!')
+        #     if not profilesList:
+        #         flash("A list of profiles is required!")
+        # else:
+        #     conn = get_db_connection()
+        #     addInitiator(conn, email)
 
 @app.route('/download/<int:id>', methods=('GET',))
 def download(requestId):
