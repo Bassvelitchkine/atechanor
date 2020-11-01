@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, send_file
 from .dataBaseManager import DataBaseManager
+from io import StringIO
+from werkzeug.wrappers import Response
 
 dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
 app = Flask(__name__)
@@ -62,8 +64,35 @@ def download(downloadLink):
     ***
     The function generates a csv file to download from the list of profile urls and their requested emails.
     """
+    import csv
 
-    return None
+    def generate(res):
+        """
+        Dynamically generates the csv file to download
+        """
+        data = StringIO()
+        w = csv.writer(data)
+
+        # write header
+        w.writerow(('timestamp', 'stackoverflowURL', 'email'))
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+
+        # write each item
+        for item in res:
+            w.writerow((item["created"], item["profileUrl"], item["email"]))
+            yield data.getvalue()
+            data.seek(0)
+            data.truncate(0)
+
+    # stream the response as the data is generated
+    response = Response(generate(dbManager.getAllProfilesFromRequest(
+        downloadLink)), mimetype='text/csv')
+    # add a filename
+    response.headers.set("Content-Disposition",
+                         "attachment", filename="result.csv")
+    return response
 
 
 @app.route("/database/<string:tableName>", methods=('GET',))

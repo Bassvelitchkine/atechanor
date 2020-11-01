@@ -68,6 +68,21 @@ class DataBaseManager():
         rows = self.connection.execute(f'SELECT * FROM {tableName}').fetchall()
         return json.dumps([dict(elem) for elem in rows])
 
+    def getAllProfilesFromRequest(self, downloadLink):
+        """
+        INPUT:
+            - downloadLink (str): the portion of the download url associated to the request
+        OUTPUT:
+            - list of dict: the list of dict inside which are the profile urls and associated emails
+        ***
+        The function returns all the data regarding the requested profiles in the request associated to the download link.
+        """
+        #
+        data = self.connection.execute(
+            f"SELECT * FROM profiles WHERE profileUrl in (SELECT profileUrl FROM requests_profiles WHERE requestId in (SELECT id FROM requests WHERE downloadLink = '{downloadLink}'))")
+        dataDict = [dict(elem) for elem in data]
+        return dataDict
+
     # ADDING ELEMENTS TO THE DATABASE #
     def addInitiator(self, email):
         """
