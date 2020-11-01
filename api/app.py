@@ -21,11 +21,12 @@ def submitRequest():
         else:
             # Add initiator to database if his not in it
             dbManager.addInitiator(email)
+            # Add profiles list to database
+            profilesToScrape, nbProfilesToProcess = dbManager.addProfiles(
+                profilesList)
             # Add request to database
             requestId = dbManager.addRequest(
-                {"initiatorId": email, "profilesList": profilesList})
-            # Add profiles list to database
-            dbManager.addProfiles(profilesList)
+                email, profilesList, nbProfilesToProcess)
             # Link request to requested profiles
             dbManager.connectRequestAndProfiles(requestId, profilesList)
             return "OK"

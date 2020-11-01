@@ -90,10 +90,12 @@ class DataBaseManager():
             self.connection.commit()
             print("Initiator successfully created \n")
 
-    def addRequest(self, request):
+    def addRequest(self, initiatorId, profileList, nbProfilesToScrape):
         """
         INPUT:
-            - dict: dictionnary with the email of the request initiator and the requested emails
+            - initiatorId (str): the email of the initiator
+            - profileList (list of str): the list of profile urls requested by the initiator
+            - nbProfilesToScrape (int): the number of profiles to process
         ***
         OUTPUT:
             - int: the id of the request we just added
@@ -102,10 +104,8 @@ class DataBaseManager():
         Then, inserts the new request in the database with the initiator's id inside.
         Finally, returns the content of the request, i.e the initiator's id and the requested emails that were successfully saved inside the database.
         """
-        initiatorId = request["initiatorId"]
-        profilesList = request['profilesList']
         rowId = self.connection.execute('INSERT INTO requests (initiatorId, downloadLink, toProcess) VALUES (?,?,?)',
-                                        (initiatorId, self.generateLink(initiatorId), len(profilesList))).lastrowid
+                                        (initiatorId, self.generateLink(initiatorId), nbProfilesToScrape)).lastrowid
         self.connection.commit()
         return rowId
 
@@ -114,17 +114,27 @@ class DataBaseManager():
         INPUT:
             - profilesList (list of str): list of profile urls to add to the database
         OUTPUT:
-            - None
-        Adds the list of profile urls to the database.
+            - list of str: the list of profiles that are not yet in the database
+        Adds the list of profile urls to the database and returns the list of profiles that weren't there before.
         """
+        profilesToScrape = []
+        nbProfilesToProcess = 0
         for profileUrl in profilesList:
             try:
                 self.connection.execute(
                     'INSERT INTO profiles (profileUrl) VALUES (?)', (profileUrl,))
+                profilesToScrape.append(profileUrl)
+                nbProfilesToProcess += 1
             except:
-                print('Profile already in database')
+                res = self.connection.execute(
+                    "SELECT email FROM profiles WHERE profileUrl = ?", (profileUrl,))
+                email = [dict(elem) for elem in res][0]['email']
+                if not email:
+                    nbProfilesToProcess += 1
+                print("\n Profile already in database \n")
 
         self.connection.commit()
+        return profilesToScrape, nbProfilesToProcess
 
     def connectRequestAndProfiles(self, requestId, profilesList):
         """
@@ -172,6 +182,7 @@ class DataBaseManager():
         rows = self.connection.execute(
             'SELECT requestId FROM requests_profiles WHERE profileId = ?', (profileUrl,))
         for row in rows:
+            print(row['requestId'])
             self.connection.execute('UPDATE requests SET toProcess = toProcess - 1'
                                     ' WHERE id = ?',
                                     (row["requestId"], ))
