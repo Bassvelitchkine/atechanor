@@ -11,17 +11,16 @@ def submitRequest():
     """
     if request.method == 'POST':
         email = request.form['email']
-        # profilesList = request.form['profilesList']
-        print(email + "\n")
-        return dbManager.addInitiator(email)
-        # if not (email or profilesList):
-        #     if not email:
-        #         flash('Email is required!')
-        #     if not profilesList:
-        #         flash("A list of profiles is required!")
-        # else:
-        #     conn = get_db_connection()
-        #     addInitiator(conn, email)
+        profilesList = request.form['profilesList']
+
+        if not (email or profilesList):
+            if not email:
+                flash('Email is required!')
+            if not profilesList:
+                flash("A list of profiles is required!")
+        else:
+            initiatorId = dbManager.addInitiator(email)
+            return dbManager.addRequest({"initiatorId": initiatorId, "requestedProfiles": profilesList})
 
 
 @app.route('/download/<int:requestId>', methods=('GET',))

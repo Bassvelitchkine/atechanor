@@ -31,20 +31,17 @@ class DataBaseManager():
 
         self.connection.row_factory = sqlite3.Row
 
-    def checkInitiator(self, email):
+    def getElementFromTable(self, elementId, table):
         """
         INPUT:
-            - str: email
+            - str or int: id of the requested element
+            - table (str): the name of the table to search in
         ***
         OUTPUT:
-            - int or None: the id of the initiator
-        ***
-        The function checks whether or not the user (of atechanor) exists.
+            - int or str or None: the id of the sought element
         """
-        initiatorEmail = self.connection.execute(
-            'SELECT email FROM initiators WHERE email = ?', (email,)).fetchone()
-        print("Successfully checked initiator's existence \n")
-        return initiatorEmail
+        return self.connection.execute(
+            f'SELECT email FROM {table} WHERE email = ?', (elementId,)).fetchone()
 
     def addInitiator(self, email):
         """
@@ -58,27 +55,46 @@ class DataBaseManager():
         If he does not exist, adds the instance to the database.
         In all cases, returns the user id attached to the email input.
         """
-        initiatorEmail = self.checkInitiator(email)
+        initiatorEmail = self.getElementFromTable(email, "initiators")
+
         if not initiatorEmail:
             sql = 'INSERT INTO initiators (email) VALUES (?)'
             data = (email, )
             self.connection.execute(sql, data)
             self.connection.commit()
-        return self.getAllInitiators()
+            print("Initiator successfully created \n")
 
-    def getAllInitiators(self):
+        return self.getElementFromTable(email, "initiators")
+
+    def getAllFromTable(self, tableName):
         """
         INPUT:
-            - Connection instance as defined in sqlite3
+            - str: name of the table in the data base
         ***
         OUTPUT:
             - list of dict: the list of all initiators
         ***
-        The function returns of all initiators in the database.
+        The function returns all instances in the table passed as argument.
         """
-        rows = self.connection.execute('SELECT * FROM initiators').fetchall()
+        rows = self.connection.execute(f'SELECT * FROM {tableName}').fetchall()
         return json.dumps([dict(elem) for elem in rows])
 
+    def addRequest(self, request):
+        """
+        INPUT:
+            - dict: dictionnary with the email of the request initiator and the requested emails
+        ***
+        OUTPUT:
+            - dict: dictionnary containing the request id as well as the requested profiles.
+        ***
+        The function adds the user to the database and retrieves his id.
+        Then, inserts the new request in the database with the initiator's id inside.
+        Finally, returns the content of the request, i.e the initiator's id and the requested emails that were successfully saved inside the database.
+        """
+        self.connection.execute('INSERT INTO requests (initiatorId) VALUES (?)',
+                                (request["initiatorId"]))
+        self.connection.commit()
+        return self.getAllFromTable("requests")
 
 # def getDBConnection():
 #     """
@@ -92,27 +108,6 @@ class DataBaseManager():
 #     conn.row_factory = sqlite3.Row
 #     print("Connected to database!")
 #     return conn
-
-
-# def addRequest(connection, request):
-#     """
-#     INPUT:
-#         - connection instance inherited from sqlite3
-#         - dict: dictionnary with the email of the request initiator and the requested emails
-#     ***
-#     OUTPUT:
-#         - dict: dictionnary containing the request id as well as the requested profiles.
-#     ***
-#     The function adds the user to the database and retrieves his id.
-#     Then, inserts the new request in the database with the initiator's id inside.
-#     Finally, returns the content of the request, i.e the initiator's id and the requested emails that were successfully saved inside the database.
-#     """
-#     # connection.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
-#     #                 (title, content))
-#     # connection.commit()
-#     # connection.close()
-#     print("Add request")
-#     return getRequest("stuff")
 
 
 # def getProfile(profileUrl):
