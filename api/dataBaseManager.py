@@ -103,8 +103,9 @@ class DataBaseManager():
         Finally, returns the content of the request, i.e the initiator's id and the requested emails that were successfully saved inside the database.
         """
         initiatorId = request["initiatorId"]
-        rowId = self.connection.execute('INSERT INTO requests (initiatorId, downloadLink) VALUES (?,?)',
-                                        (initiatorId, self.generateLink(initiatorId))).lastrowid
+        profilesList = request['profilesList']
+        rowId = self.connection.execute('INSERT INTO requests (initiatorId, downloadLink, toProcess) VALUES (?,?,?)',
+                                        (initiatorId, self.generateLink(initiatorId), len(profilesList))).lastrowid
         self.connection.commit()
         return rowId
 
@@ -139,7 +140,52 @@ class DataBaseManager():
             'INSERT INTO requests_profiles (requestId, profileId) VALUES (?,?)', [(requestId, profileId) for profileId in profilesList])
         self.connection.commit()
 
+    # MODIFYING ELEMENTS IN THE DATABASE #
+    def updateProfileEmail(self, profileUrl, email):
+        """
+        INPUT:
+            - urlPortion (str): the stackoverflow url
+            - email (str): the email found for the stackoverflow profile
+        OUTPUT: 
+            None
+        ****
+        The function updates the profile email in the profiles table as well as the requests in the associated table to see
+        if the request is ready.
+        """
+        self.connection.execute('UPDATE profiles SET email = ?'
+                                ' WHERE profileUrl = ?',
+                                (email, profileUrl))
+        self.connection.commit()
+
+    def updateRequestStatus(self, profileUrl):
+        """
+        INPUT:
+            - profileUrl (str): the profileUrl whose email was eventually found
+        OUTPUT:
+            - list of str: the list of initiators name whose requests were completed
+        ****
+        The function updates the profile whose email was eventually found as well as wall requests associated to this profile.
+        It returns the list of initiators whose requests were completed.
+        """
+        initiatorsSatisfied = []
+
+        rows = self.connection.execute(
+            'SELECT requestId FROM requests_profiles WHERE profileId = ?', (profileUrl,))
+        for row in rows:
+            self.connection.execute('UPDATE requests SET toProcess = toProcess - 1'
+                                    ' WHERE id = ?',
+                                    (row["requestId"], ))
+            self.connection.commit()
+            res = self.connection.execute(
+                "SELECT toProcess, initiatorId FROM requests WHERE id = ?", (row["requestId"],))
+            resDict = [dict(elem) for elem in res][0]
+            toProcess = resDict['toProcess']
+            if toProcess == 0:
+                initiatorsSatisfied.append(resDict['initiatorId'])
+        return initiatorsSatisfied
+
     # UTILS
+
     def generateLink(self, initiatorId):
         """
         INPUT:

@@ -23,7 +23,7 @@ def submitRequest():
             dbManager.addInitiator(email)
             # Add request to database
             requestId = dbManager.addRequest(
-                {"initiatorId": email, "requestedProfiles": profilesList})
+                {"initiatorId": email, "profilesList": profilesList})
             # Add profiles list to database
             dbManager.addProfiles(profilesList)
             # Link request to requested profiles
@@ -31,17 +31,37 @@ def submitRequest():
             return "OK"
 
 
-@app.route('/download/<int:requestId>', methods=('GET',))
-def download(requestId):
+@app.route('/update/<string:urlPortion>/<string:email>', methods=('PUT',))
+def updateProfileEmail(urlPortion, email):
     """
+    INPUT:
+        - urlPortion (str): the part of the url that differenciates several stackoverflow users
+        - email (str): the email found for the stackoverflow profile
+    OUTPUT: None
+    ****
+    The function updates the profile email in the profiles table as well as the requests in the associated table to see
+    if the request is ready.
     """
-    # post = get_post(id)
-    # conn = get_db_connection()
-    # conn.execute('DELETE FROM posts WHERE id = ?', (id,))
-    # conn.commit()
-    # conn.close()
-    # flash('"{}" was successfully deleted!'.format(post['title']))
-    # return redirect(url_for('index'))
+    profileUrl = "https://stackoverflow.com/users/" + urlPortion + "/view"
+    # Let's update first the profile whose email was eventually found
+    dbManager.updateProfileEmail(profileUrl, email)
+    # Let's update requests that have said profile in their request
+    initiatorStatisfied = dbManager.updateRequestStatus(profileUrl)
+    print("\n initiators satisfied: " + " // ".join(initiatorStatisfied))
+    return "ALL RIGHT"
+
+
+@app.route('/download/<string:downloadLink>', methods=('GET',))
+def download(downloadLink):
+    """
+    INPUT:
+        - downloadLink (str): the hash associated to a particular request.
+    OUTPUT:
+        - csv
+    ***
+    The function generates a csv file to download from the list of profile urls and their requested emails.
+    """
+
     return None
 
 
