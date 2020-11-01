@@ -117,8 +117,13 @@ class DataBaseManager():
             - None
         Adds the list of profile urls to the database.
         """
-        self.connection.executemany('INSERT INTO profiles (profileUrl) VALUES (?)', [
-            (profileUrl,) for profileUrl in profilesList])
+        for profileUrl in profilesList:
+            try:
+                self.connection.execute(
+                    'INSERT INTO profiles (profileUrl) VALUES (?)', (profileUrl,))
+            except:
+                print('Profile already in database')
+
         self.connection.commit()
         return self.getAllFromTable("profiles")
 
