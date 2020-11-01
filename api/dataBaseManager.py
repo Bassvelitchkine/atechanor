@@ -75,7 +75,7 @@ class DataBaseManager():
             - str: initiator's email
         ***
         OUTPUT:
-            - int: returns the user id
+            - None
         ***
         The function checks whether or not the user already exists.
         If he does not exist, adds the instance to the database.
@@ -90,15 +90,13 @@ class DataBaseManager():
             self.connection.commit()
             print("Initiator successfully created \n")
 
-        return [str(elem) for elem in self.getInitiator(email)][0]
-
     def addRequest(self, request):
         """
         INPUT:
             - dict: dictionnary with the email of the request initiator and the requested emails
         ***
         OUTPUT:
-            - dict: dictionnary containing the request id as well as the requested profiles.
+            - int: the id of the request we just added
         ***
         The function adds the user to the database and retrieves his id.
         Then, inserts the new request in the database with the initiator's id inside.
@@ -108,7 +106,7 @@ class DataBaseManager():
         rowId = self.connection.execute('INSERT INTO requests (initiatorId, downloadLink) VALUES (?,?)',
                                         (initiatorId, self.generateLink(initiatorId))).lastrowid
         self.connection.commit()
-        return [str(elem) for elem in self.getRequest(rowId)]
+        return rowId
 
     def addProfiles(self, profilesList):
         """
@@ -126,8 +124,22 @@ class DataBaseManager():
                 print('Profile already in database')
 
         self.connection.commit()
-        return self.getAllFromTable("profiles")
 
+    def connectRequestAndProfiles(self, requestId, profilesList):
+        """
+        INPUT:
+            - requestId (int): the id of the request
+            - profilesList (list of str): the list of all requested profiles
+        OUTPUT:
+            - None
+        ***
+        The function connects the request in the requests table to the profile urls in the profiles table.
+        """
+        self.connection.executemany(
+            'INSERT INTO requests_profiles (requestId, profileId) VALUES (?,?)', [(requestId, profileId) for profileId in profilesList])
+        self.connection.commit()
+
+    # UTILS
     def generateLink(self, initiatorId):
         """
         INPUT:

@@ -20,14 +20,15 @@ def submitRequest():
                 flash("A list of profiles is required!")
         else:
             # Add initiator to database if his not in it
-            initiatorId = dbManager.addInitiator(email)
-            print("\n " + "initiatorId: " + initiatorId + "\n")
+            dbManager.addInitiator(email)
             # Add request to database
-            addedRequest = dbManager.addRequest(
-                {"initiatorId": initiatorId, "requestedProfiles": profilesList})
-            print("Request: " + " // ".join(addedRequest) + "\n")
+            requestId = dbManager.addRequest(
+                {"initiatorId": email, "requestedProfiles": profilesList})
             # Add profiles list to database
-            return dbManager.addProfiles(profilesList)
+            dbManager.addProfiles(profilesList)
+            # Link request to requested profiles
+            dbManager.connectRequestAndProfiles(requestId, profilesList)
+            return "OK"
 
 
 @app.route('/download/<int:requestId>', methods=('GET',))
@@ -42,3 +43,11 @@ def download(requestId):
     # flash('"{}" was successfully deleted!'.format(post['title']))
     # return redirect(url_for('index'))
     return None
+
+
+@app.route("/database/<string:tableName>", methods=('GET',))
+def displayDataBase(tableName):
+    """
+    Displays database table whose name was filled in the url
+    """
+    return dbManager.getAllFromTable(tableName)
