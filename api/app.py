@@ -21,7 +21,7 @@ def submitRequest():
         else:
             # Add initiator to database if his not in it
             initiatorId = dbManager.addInitiator(email)
-            print("\n initiatorId: " + initiatorId + "\n")
+            print("\n " + "initiatorId: " + initiatorId + "\n")
             # Add request to database
             addedRequest = dbManager.addRequest(
                 {"initiatorId": initiatorId, "requestedProfiles": profilesList})

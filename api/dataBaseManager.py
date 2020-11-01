@@ -104,8 +104,9 @@ class DataBaseManager():
         Then, inserts the new request in the database with the initiator's id inside.
         Finally, returns the content of the request, i.e the initiator's id and the requested emails that were successfully saved inside the database.
         """
-        rowId = self.connection.execute('INSERT INTO requests (initiatorId) VALUES (?)',
-                                        (request["initiatorId"],)).lastrowid
+        initiatorId = request["initiatorId"]
+        rowId = self.connection.execute('INSERT INTO requests (initiatorId, downloadLink) VALUES (?,?)',
+                                        (initiatorId, self.generateLink(initiatorId))).lastrowid
         self.connection.commit()
         return [str(elem) for elem in self.getRequest(rowId)]
 
@@ -126,6 +127,22 @@ class DataBaseManager():
 
         self.connection.commit()
         return self.getAllFromTable("profiles")
+
+    def generateLink(self, initiatorId):
+        """
+        INPUT:
+            - str: id of the initiator
+        OUTPUT:
+            - str: a hash that will be used to download the result of the request afterwards
+        """
+        from datetime import datetime
+        from hashlib import sha1
+
+        user = initiatorId
+        time = str(datetime.now().isoformat())
+        plain = user + time
+        token = sha1(plain.encode('utf-8'))
+        return token.hexdigest()
 
 
 # def getProfile(profileUrl):

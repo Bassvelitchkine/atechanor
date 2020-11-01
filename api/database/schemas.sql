@@ -12,6 +12,7 @@ CREATE TABLE requests (
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     processed BOOLEAN NOT NULL DEFAULT 0,
+    downloadLink TEXT NOT NULL UNIQUE,
     initiatorId TEXT NOT NULL,
     FOREIGN KEY (initiatorId)
         REFERENCES initiators (email)
