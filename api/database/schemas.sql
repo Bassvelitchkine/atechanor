@@ -1,4 +1,7 @@
--- DROP TABLE IF EXISTS initiators;
+DROP TABLE IF EXISTS initiators;
+DROP TABLE IF EXISTS requests;
+DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS requests_profiles;
 
 CREATE TABLE initiators (
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

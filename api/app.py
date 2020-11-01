@@ -10,8 +10,8 @@ def submitRequest():
     """
     """
     if request.method == 'POST':
-        email = request.form['email']
-        profilesList = request.form['profilesList']
+        email = request.json['email']
+        profilesList = request.json['profilesList']
 
         if not (email or profilesList):
             if not email:
@@ -19,8 +19,15 @@ def submitRequest():
             if not profilesList:
                 flash("A list of profiles is required!")
         else:
+            # Add initiator to database if his not in it
             initiatorId = dbManager.addInitiator(email)
-            return dbManager.addRequest({"initiatorId": initiatorId, "requestedProfiles": profilesList})
+            print("\n initiatorId: " + initiatorId + "\n")
+            # Add request to database
+            addedRequest = dbManager.addRequest(
+                {"initiatorId": initiatorId, "requestedProfiles": profilesList})
+            print("Request: " + " // ".join(addedRequest) + "\n")
+            # Add profiles list to database
+            return dbManager.addProfiles(profilesList)
 
 
 @app.route('/download/<int:requestId>', methods=('GET',))
