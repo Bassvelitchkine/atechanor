@@ -1,21 +1,19 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
-from databaseManager import getDBConnection, addInitiator
-from middlewares import checkDatabase
+from .dataBaseManager import DataBaseManager
 
+dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
 app = Flask(__name__)
 
 
 @app.route('/submit', methods=('POST',))
-@checkDatabase
 def submitRequest():
     """
     """
     if request.method == 'POST':
         email = request.form['email']
         # profilesList = request.form['profilesList']
-        print(email)
-        conn = getDBConnection()
-        return addInitiator(conn, email)
+        print(email + "\n")
+        return dbManager.addInitiator(email)
         # if not (email or profilesList):
         #     if not email:
         #         flash('Email is required!')
@@ -26,8 +24,7 @@ def submitRequest():
         #     addInitiator(conn, email)
 
 
-@app.route('/download/<int:id>', methods=('GET',))
-@checkDatabase
+@app.route('/download/<int:requestId>', methods=('GET',))
 def download(requestId):
     """
     """
