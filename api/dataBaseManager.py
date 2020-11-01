@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def getDBConnection():
     """
     INPUT: 
@@ -13,6 +14,7 @@ def getDBConnection():
     print("Connected to database!")
     return conn
 
+
 def checkInitiator(connection, email):
     """
     INPUT:
@@ -24,7 +26,8 @@ def checkInitiator(connection, email):
     ***
     The function checks whether or not the user (of atechanor) exists.
     """
-    initiatorEmail = connection.execute('SELECT email FROM initiators WHERE email = ?', (email,)).fetchone()
+    initiatorEmail = connection.execute(
+        'SELECT email FROM initiators WHERE email = ?', (email,)).fetchone()
 
     if initiatorEmail:
         print("Successfully checked initiator's existence")
@@ -32,6 +35,7 @@ def checkInitiator(connection, email):
     else:
         print("Successfully checked initiator's existence")
         return None
+
 
 def addInitiator(connection, email):
     """
@@ -48,10 +52,25 @@ def addInitiator(connection, email):
     """
     initiatorEmail = checkInitiator(connection, email)
     if not initiatorEmail:
+        connection.execute(
+            'INSERT INTO initiators (email,) VALUES (?,)', (email,))
+        connection.commit()
+    return getAllInitiators(connection)
 
-    else:
-        print("User successfully added to database")
-        return initiatorEmail
+
+def getAllInitiators(connection):
+    """
+    INPUT:
+        - Connection instance as defined in sqlite3
+    ***
+    OUTPUT:
+        - list of dict: the list of all initiators
+    ***
+    The function returns of all initiators in the database.
+    """
+    initiators = connection.execute('SELECT * FROM initiators').fetchall()
+    return initiators
+
 
 def addRequest(connection, request):
     """
@@ -73,6 +92,7 @@ def addRequest(connection, request):
     print("Add request")
     return getRequest("stuff")
 
+
 def getProfile(profileUrl):
     """
     INPUT:
@@ -85,6 +105,7 @@ def getProfile(profileUrl):
     """
     print('Got the user profile url!')
 
+
 def getProfileList(listProfileUrls):
     """
     INPUT:
@@ -95,9 +116,12 @@ def getProfileList(listProfileUrls):
     ***
     The function retrieves a list of requested profile infos from the database i.e all stackoverflow profile urls and attached emails.
     """
+
+
 def updateRequest():
     """
     """
+
 
 def getRequest(requestId):
     """
@@ -113,7 +137,6 @@ def getRequest(requestId):
     return "payload"
 
 
-
 def addProfile(stackoverflow, mail):
     """
     INPUT: 
@@ -127,10 +150,12 @@ def addProfile(stackoverflow, mail):
     """
     print("Successfully added new profile info")
 
+
 def getRequestedProfiles(listRequestedProfiles):
     """
 
     """
+
 
 def checkStatus():
     """
