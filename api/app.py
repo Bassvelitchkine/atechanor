@@ -2,9 +2,15 @@ from flask import Flask, render_template, request, url_for, flash, redirect, sen
 from .dataBaseManager import DataBaseManager
 from io import StringIO
 from werkzeug.wrappers import Response
+from rq import Queue
+from rq.job import Job
+from .scraper.worker import conn
+from .scraper.emailScraper import emailScraper
 
 dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
 app = Flask(__name__)
+
+q = Queue(connection=conn)
 
 
 @app.route('/submit', methods=('POST',))
@@ -31,6 +37,13 @@ def submitRequest():
                 email, profilesList, nbProfilesToProcess)
             # Link request to requested profiles
             dbManager.connectRequestAndProfiles(requestId, profilesList)
+
+            # Add tasks to the queue
+            for profileUrl in profilesToScrape:
+                job = q.enqueue_call(
+                    func=emailScraper, args=(profileUrl,), result_ttl=5000)
+                print("\n Job id: " + job.get_id() + "\n")
+
             return "OK"
 
 
@@ -40,7 +53,8 @@ def updateProfileEmail(urlPortion, email):
     INPUT:
         - urlPortion (str): the part of the url that differenciates several stackoverflow users
         - email (str): the email found for the stackoverflow profile
-    OUTPUT: None
+    OUTPUT: 
+        - None
     ****
     The function updates the profile email in the profiles table as well as the requests in the associated table to see
     if the request is ready.
@@ -101,3 +115,14 @@ def displayDataBase(tableName):
     Displays database table whose name was filled in the url
     """
     return dbManager.getAllFromTable(tableName)
+
+
+@app.route("/redis/<string:job_key>", methods=('GET',))
+def get_results(job_key):
+
+    job = Job.fetch(job_key, connection=conn)
+
+    if job.is_finished:
+        return str(job.result), 200
+    else:
+        return "Nay!", 202
