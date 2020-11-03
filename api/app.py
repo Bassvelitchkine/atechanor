@@ -1,16 +1,16 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, send_file
-from .dataBaseManager import DataBaseManager
+from dataBaseManager import DataBaseManager
 from io import StringIO
 from werkzeug.wrappers import Response
-from rq import Queue
-from rq.job import Job
-from .scraper.worker import conn
-from .scraper.emailScraper import emailScraper
+# from rq import Queue
+# from rq.job import Job
+# from .scraper.worker import conn
+# from .scraper.emailScraper import emailScraper
 
 dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
 app = Flask(__name__)
 
-q = Queue(connection=conn)
+# q = Queue(connection=conn)
 
 
 @app.route('/submit', methods=('POST',))
@@ -38,11 +38,11 @@ def submitRequest():
             # Link request to requested profiles
             dbManager.connectRequestAndProfiles(requestId, profilesList)
 
-            # Add tasks to the queue
-            for profileUrl in profilesToScrape:
-                job = q.enqueue_call(
-                    func=emailScraper, args=(profileUrl,), result_ttl=5000)
-                print("\n Job id: " + job.get_id() + "\n")
+            # # Add tasks to the queue
+            # for profileUrl in profilesToScrape:
+            #     job = q.enqueue_call(
+            #         func=emailScraper, args=(profileUrl,), result_ttl=5000)
+            #     print("\n Job id: " + job.get_id() + "\n")
 
             return "OK"
 
@@ -126,3 +126,7 @@ def get_results(job_key):
         return str(job.result), 200
     else:
         return "Nay!", 202
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5005)

@@ -41,8 +41,7 @@ class DataBaseManager():
         OUTPUT:
             - int or str or None: the id of the sought element
         """
-        return self.connection.execute(
-            f'SELECT email FROM initiators WHERE email = ?', (initiatorId,)).fetchone()
+        return self.connection.execute('SELECT email FROM initiators WHERE email = ?', (initiatorId,)).fetchone()
 
     def getRequest(self, requestId):
         """
@@ -52,8 +51,7 @@ class DataBaseManager():
         OUTPUT:
             - int or str or None: the id of the sought element
         """
-        return self.connection.execute(
-            f'SELECT * FROM requests WHERE id = ?', (requestId,)).fetchone()
+        return self.connection.execute('SELECT * FROM requests WHERE id = ?', (requestId,)).fetchone()
 
     def getAllFromTable(self, tableName):
         """
@@ -77,7 +75,6 @@ class DataBaseManager():
         ***
         The function returns all the data regarding the requested profiles in the request associated to the download link.
         """
-        #
         data = self.connection.execute(
             f"SELECT * FROM profiles WHERE profileUrl in (SELECT profileUrl FROM requests_profiles WHERE requestId in (SELECT id FROM requests WHERE downloadLink = '{downloadLink}'))")
         dataDict = [dict(elem) for elem in data]
