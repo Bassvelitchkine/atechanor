@@ -2,9 +2,8 @@ FROM python:3
 
 WORKDIR /usr/src/app
 
-COPY packages.txt ./
-RUN pip install --no-cache-dir -r packages.txt
+ADD ./packages.txt /usr/src/app/packages.txt
 
-COPY . .
+RUN pip install -r packages.txt
 
-CMD [ "python", "app.py" ]
+COPY . /usr/src/app
