@@ -2,9 +2,8 @@ version: "3.7"
 
 services:
   web:
-    build: .
+    build: ./api
     image: api
-    container_name: api
     ports:
       - 5000:5005
     command: python app.py
