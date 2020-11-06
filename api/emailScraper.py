@@ -1,30 +1,46 @@
 import json
+import time
+import requests
+import re
+from bs4 import BeautifulSoup
+
+
+def aux(res, myjson, key):
+    """
+    """
+    temp = []
+
+    if type(myjson) is str:
+        return res
+    else:
+        if type(myjson) is dict:
+            for jsonkey in myjson.keys():
+                if jsonkey == key:
+                    temp += aux(res + [myjson[jsonkey]], myjson[jsonkey], key)
+                else:
+                    temp += aux(res, myjson[jsonkey], key)
+        elif type(myjson) is list:
+            for elem in myjson:
+                temp += aux(res, elem, key)
+        return temp
+
+
+def findValueByKey(myjson, key):
+    temp = aux([], myjson, key)
+    return list(set(temp))
+
+
+def parsePayload(url):
+    return requests.get(url).json()
 
 
 def githubLink(href):
     return href and "github.com" in href
 
 
-def findValueByKey(myjson, key):
-    if type(myjson) is dict:
-        for jsonkey in myjson:
-            if type(myjson[jsonkey]) in (list, dict):
-                findValueByKey(myjson[jsonkey], key)
-            elif jsonkey == key:
-                yield myjson[jsonkey]
-    elif type(myjson) is list:
-        for item in myjson:
-            if type(item) in (list, dict):
-                findValueByKey(item, key)
-
-
 def emailScraper(url):
     """
     """
-    import time
-    import requests
-    import re
-    from bs4 import BeautifulSoup
 
     urlPortion = re.search('\d+', url)[0]
 
@@ -32,11 +48,10 @@ def emailScraper(url):
     githubName = soup.find(href=githubLink)
 
     if githubName:
-        githubPayload = requests.get(
-            "https://api.github.com/users/" + githubName.text + "/events/public").json()
+        githubPayload = parsePayload(
+            "https://api.github.com/users/" + githubName.text + "/events/public")
         try:
-            emails = [email for email in findValueByKey(
-                githubPayload, "email")]
+            emails = findValueByKey(githubPayload, "email")
         except:
             emails = "No url found"
     else:
