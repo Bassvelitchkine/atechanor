@@ -1,8 +1,8 @@
 import json
 import time
 import requests
-import re
 from bs4 import BeautifulSoup
+from random import random, randint
 
 
 def aux(res, myjson, key):
@@ -42,8 +42,6 @@ def emailScraper(url):
     """
     """
 
-    urlPortion = re.search('\d+', url)[0]
-
     soup = BeautifulSoup(requests.get(url).text, "html.parser")
     githubName = soup.find(href=githubLink)
 
@@ -53,12 +51,18 @@ def emailScraper(url):
         try:
             emails = findValueByKey(githubPayload, "email")
         except:
-            emails = "No url found"
+            emails = ""
     else:
-        emails = "No url found"
+        emails = ""
 
-    res = requests.put('http://web:5005/update/' +
-                       urlPortion + '/bob@gmail.com')
+    res = requests.put('http://web:5005/update',
+                       json={"profileUrl": url, "emails": emails})
 
-    print(emails)
-    return {"emails": emails}
+    # 10% chance to wait for 10 minutes before moving on to the next job
+    randomFloat = random()
+    if randomFloat > 0.9:
+        time.sleep(600)
+    else:
+        time.sleep(randint(20, 40))
+
+    return "OK"

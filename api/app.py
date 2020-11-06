@@ -11,7 +11,7 @@ dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
 app = Flask(__name__)
 
 conn = redis.from_url("redis://redis:6379")
-q = Queue(connection=conn)
+q = Queue(connection=conn, default_timeout=1000)
 
 
 @app.route('/submit', methods=('POST',))
@@ -48,8 +48,8 @@ def submitRequest():
             return "OK"
 
 
-@app.route('/update/<string:urlPortion>/<string:email>', methods=('PUT',))
-def updateProfileEmail(urlPortion, email):
+@app.route('/update', methods=('PUT',))
+def updateProfileEmail():
     """
     INPUT:
         - urlPortion (str): the part of the url that differenciates several stackoverflow users
@@ -60,9 +60,12 @@ def updateProfileEmail(urlPortion, email):
     The function updates the profile email in the profiles table as well as the requests in the associated table to see
     if the request is ready.
     """
-    profileUrl = "https://stackoverflow.com/users/" + urlPortion + "/view"
+    profileUrl = request.json["profileUrl"]
+    emails = ",".join(request.json["emails"])
+
     # Let's update first the profile whose email was eventually found
-    dbManager.updateProfileEmail(profileUrl, email)
+    dbManager.updateProfileEmail(profileUrl, emails)
+
     # Let's update requests that have said profile in their request
     initiatorStatisfied = dbManager.updateRequestStatus(profileUrl)
     print("\n initiators satisfied: " + " // ".join(initiatorStatisfied))
