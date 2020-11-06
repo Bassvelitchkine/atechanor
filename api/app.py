@@ -6,12 +6,23 @@ from rq import Queue
 from rq.job import Job
 from emailScraper import emailScraper
 import redis
+from flask_mail import Mail, Message
 
+# Database connection
 dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
-app = Flask(__name__)
-
+# Reddis and queue
 conn = redis.from_url("redis://redis:6379")
 q = Queue(connection=conn, default_timeout=1000)
+# Flask app
+app = Flask(__name__)
+# Flask mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'bastien.velitchkine@gmail.com'
+app.config['MAIL_PASSWORD'] = 'gymnastique'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 
 @app.route('/submit', methods=('POST',))
@@ -68,7 +79,16 @@ def updateProfileEmail():
 
     # Let's update requests that have said profile in their request
     initiatorStatisfied = dbManager.updateRequestStatus(profileUrl)
-    print("\n initiators satisfied: " + " // ".join(initiatorStatisfied))
+    # print("\n initiators satisfied: " + " // ".join([elem[0] for elem in initiatorStatisfied]))
+
+    # Send download link to initiators satisfied
+    for initiator in initiatorStatisfied:
+        msg = Message('Your export is ready',
+                      sender='bastien.velitchkine@gmail.com', recipients=[initiator[0]])
+        msg.body = "http://192.168.99.100:5000/download/" + \
+            initiator[1]  # We add the download link
+        mail.send(msg)
+
     return "ALL RIGHT"
 
 

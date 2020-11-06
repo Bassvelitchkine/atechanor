@@ -200,11 +200,12 @@ class DataBaseManager():
                                     (row["requestId"], ))
             self.connection.commit()
             res = self.connection.execute(
-                "SELECT toProcess, initiatorId FROM requests WHERE id = ?", (row["requestId"],))
+                "SELECT toProcess, initiatorId, downloadLink FROM requests WHERE id = ?", (row["requestId"],))
             resDict = [dict(elem) for elem in res][0]
             toProcess = resDict['toProcess']
             if toProcess == 0:
-                initiatorsSatisfied.append(resDict['initiatorId'])
+                initiatorsSatisfied.append(
+                    (resDict['initiatorId'], resDict['downloadLink']))
         return initiatorsSatisfied
 
     # UTILS
