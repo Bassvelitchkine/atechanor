@@ -7,6 +7,7 @@ from rq.job import Job
 from emailScraper import emailScraper
 import redis
 from flask_mail import Mail, Message
+from flask_cors import CORS
 
 # Database connection
 dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
@@ -15,6 +16,8 @@ conn = redis.from_url("redis://redis:6379")
 q = Queue(connection=conn, default_timeout=1000)
 # Flask app
 app = Flask(__name__)
+# CORS policies
+cors = CORS(app)
 # Flask mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465

@@ -1,6 +1,7 @@
 import React from "react";
 import Form from "./Form.component";
 import Papa from "papaparse";
+import axios from "axios";
 
 const arrayColumnSelection = (array, columnName) => {
   const header = array[0];
@@ -25,10 +26,22 @@ export default class FormContainer extends React.Component {
   };
 
   onSubmit = (formData) => {
-    const profileUrls = arrayColumnSelection(this.state.data, formData.column);
+    const profilesList = arrayColumnSelection(this.state.data, formData.column);
     const email = formData.email;
-    const res = { email, profileUrls };
-    console.log(res);
+    const res = { email, profilesList };
+
+    axios({
+      method: "post",
+      url: "http://192.168.99.100:5000/submit",
+      headers: {
+        "Access-Control-Allow-Origin": true,
+      },
+      data: res,
+    })
+      .then((response) => {
+        console.log("Successful submission");
+      })
+      .catch((err) => console.log(err));
   };
 
   render() {

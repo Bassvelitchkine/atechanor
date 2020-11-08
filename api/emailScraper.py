@@ -44,16 +44,16 @@ def emailScraper(url):
 
     soup = BeautifulSoup(requests.get(url).text, "html.parser")
     githubName = soup.find(href=githubLink)
+    emails = None
 
     if githubName:
         githubPayload = parsePayload(
             "https://api.github.com/users/" + githubName.text + "/events/public")
+
         try:
             emails = findValueByKey(githubPayload, "email")
         except:
-            emails = ""
-    else:
-        emails = ""
+            None
 
     res = requests.put('http://web:5005/update',
                        json={"profileUrl": url, "emails": emails})
