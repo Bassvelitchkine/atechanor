@@ -79,7 +79,6 @@ def updateProfileEmail():
 
     # Let's update requests that have said profile in their request
     initiatorStatisfied = dbManager.updateRequestStatus(profileUrl)
-    # print("\n initiators satisfied: " + " // ".join([elem[0] for elem in initiatorStatisfied]))
 
     # Send download link to initiators satisfied
     for initiator in initiatorStatisfied:
