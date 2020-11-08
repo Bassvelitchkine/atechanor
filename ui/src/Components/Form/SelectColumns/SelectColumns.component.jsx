@@ -4,13 +4,17 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-const SelectColumns = ({ columns }) => {
+const SelectColumns = ({ columns, register, setValue }) => {
+  React.useEffect(() => {
+    register({ name: "column", required: true });
+  }, [register]);
+
   return (
     <FormControl>
-      <InputLabel id="columns">Column</InputLabel>
+      <InputLabel>Column</InputLabel>
       <Select
-        name="columns"
-        // onChange={(e) => setValue("columns", e.target.value)}
+        name="column"
+        onChange={(e) => setValue("column", e.target.value)}
         fullWidth
       >
         {columns.map((column) => (

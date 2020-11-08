@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import Button from "@material-ui/core/Button";
 
-const Upload = () => {
+const Upload = ({ onUpload }) => {
   return (
     <Fragment>
       <label htmlFor="fileInput">
@@ -15,6 +15,7 @@ const Upload = () => {
         name="file"
         type="file"
         style={{ display: "none" }}
+        onChange={(e) => onUpload(e)}
       />
     </Fragment>
   );
