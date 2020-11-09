@@ -10,11 +10,12 @@ const SelectColumns = ({ columns, register, setValue }) => {
   }, [register]);
 
   return (
-    <FormControl>
-      <InputLabel>Column</InputLabel>
+    <FormControl margin="normal" fullWidth>
+      <InputLabel color="secondary">Column</InputLabel>
       <Select
         name="column"
         onChange={(e) => setValue("column", e.target.value)}
+        color="secondary"
         fullWidth
       >
         {columns.map((column) => (

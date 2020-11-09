@@ -1,12 +1,13 @@
-import React, { Fragment } from "react";
+import React from "react";
 import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
 
 const Email = ({ register, errors }) => {
   return (
-    <Fragment>
+    <FormControl margin="normal" fullWidth>
       <TextField
         name="email"
-        label="email"
+        label="Email"
         margin="normal"
         inputRef={register({
           required: true,
@@ -15,10 +16,11 @@ const Email = ({ register, errors }) => {
             message: "Invalid email address",
           },
         })}
+        color="secondary"
         fullWidth
       />
       {errors.email && <p>{errors.email.message}</p>}
-    </Fragment>
+    </FormControl>
   );
 };
 
