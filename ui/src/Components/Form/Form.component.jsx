@@ -3,21 +3,10 @@ import UploadButton from "./UploadButton/UploadButton.component";
 import SubmitButton from "./SubmitButton/SubmitButton.component";
 import SelectColumns from "./SelectColumns/SelectColumns.component";
 import { useForm } from "react-hook-form";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles({
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "60%",
-    height: "100%",
-  },
-});
+import useStyles from "./Form.style";
 
 const Form = ({ csvParser, columns, onSubmit }) => {
-  const { register, errors, handleSubmit, setValue } = useForm();
+  const { register, errors, handleSubmit, setValue, reset } = useForm();
   const classes = useStyles();
 
   const handleChange = (e) => {
@@ -26,7 +15,13 @@ const Form = ({ csvParser, columns, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+    <form
+      onSubmit={handleSubmit(() => {
+        onSubmit();
+        reset();
+      })}
+      className={classes.form}
+    >
       <UploadButton onUpload={(e) => handleChange(e)} />
       <SelectColumns
         columns={columns}

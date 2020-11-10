@@ -11,11 +11,11 @@ const SelectColumns = ({ columns, register, setValue }) => {
 
   return (
     <FormControl margin="normal" fullWidth>
-      <InputLabel color="secondary">Column</InputLabel>
+      <InputLabel color="primary">Profile URL column</InputLabel>
       <Select
         name="column"
         onChange={(e) => setValue("column", e.target.value)}
-        color="secondary"
+        color="primary"
         fullWidth
       >
         {columns.map((column) => (

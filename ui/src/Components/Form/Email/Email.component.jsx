@@ -1,13 +1,14 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const Email = ({ register, errors }) => {
   return (
     <FormControl margin="normal" fullWidth>
       <TextField
         name="email"
-        label="Email"
+        label="Your email"
         margin="normal"
         inputRef={register({
           required: true,
@@ -16,10 +17,11 @@ const Email = ({ register, errors }) => {
             message: "Invalid email address",
           },
         })}
-        color="secondary"
-        fullWidth
+        color="primary"
+        variant="outlined"
+        size="medium"
       />
-      {errors.email && <p>{errors.email.message}</p>}
+      {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
     </FormControl>
   );
 };
