@@ -2,7 +2,10 @@ import React from "react";
 import Form from "./Form.component";
 import Papa from "papaparse";
 import axios from "axios";
+import { connect } from "react-redux";
+import { displayError, displaySucess } from "../../Modules/actions";
 
+// UTILS
 const arrayColumnSelection = (array, columnName) => {
   const header = array[0];
   const index = header.findIndex((elem) => elem === columnName);
@@ -11,7 +14,8 @@ const arrayColumnSelection = (array, columnName) => {
   return res;
 };
 
-export default class FormContainer extends React.Component {
+// CONTAINER
+class FormContainer extends React.Component {
   state = {
     columns: ["undefined"],
     data: null,
@@ -26,6 +30,9 @@ export default class FormContainer extends React.Component {
   };
 
   onSubmit = (formData) => {
+    // Display the loader
+    this.props.handleLoader();
+    // Prepare the data
     const profilesList = arrayColumnSelection(this.state.data, formData.column);
     const email = formData.email;
     const res = { email, profilesList };
@@ -39,9 +46,15 @@ export default class FormContainer extends React.Component {
       data: res,
     })
       .then((response) => {
-        console.log("Successful submission");
+        {
+          console.log("Successful submission");
+          this.props.handleSuccess();
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        this.props.handleError();
+      });
   };
 
   render() {
@@ -50,7 +63,31 @@ export default class FormContainer extends React.Component {
         csvParser={(file) => this.handleCsvParsing(file)}
         columns={this.state.columns}
         onSubmit={(data) => this.onSubmit(data)}
+        status={this.props.status}
       />
     );
   }
 }
+
+// LINK REDUX AND REACT
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleError: () => {
+      dispatch(displayError());
+    },
+    handleSuccess: () => {
+      dispatch(displaySucess());
+    },
+    handleLoader: () => {
+      dispatch(displayLoader());
+    },
+  };
+};
+
+const mapStateToProps = (state) => {
+  return {
+    status: state.status,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormContainer);

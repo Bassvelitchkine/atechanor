@@ -4,8 +4,9 @@ import SubmitButton from "./SubmitButton/SubmitButton.component";
 import SelectColumns from "./SelectColumns/SelectColumns.component";
 import { useForm } from "react-hook-form";
 import useStyles from "./Form.style";
+import { Typography } from "@material-ui/core";
 
-const Form = ({ csvParser, columns, onSubmit }) => {
+const Form = ({ csvParser, columns, onSubmit, status }) => {
   const { register, errors, handleSubmit, setValue, reset } = useForm();
   const classes = useStyles();
 
@@ -14,24 +15,33 @@ const Form = ({ csvParser, columns, onSubmit }) => {
     csvParser(files[0]);
   };
 
-  return (
-    <form
-      onSubmit={handleSubmit(() => {
-        onSubmit();
-        reset();
-      })}
-      className={classes.form}
-    >
-      <UploadButton onUpload={(e) => handleChange(e)} />
-      <SelectColumns
-        columns={columns}
-        register={register}
-        setValue={setValue}
-      />
-      <Email register={register} errors={errors} />
-      <SubmitButton />
-    </form>
-  );
+  switch (status) {
+    case "PENDING":
+      return (
+        <form
+          onSubmit={handleSubmit(() => {
+            onSubmit();
+            reset();
+          })}
+          className={classes.form}
+        >
+          <UploadButton onUpload={(e) => handleChange(e)} />
+          <SelectColumns
+            columns={columns}
+            register={register}
+            setValue={setValue}
+          />
+          <Email register={register} errors={errors} />
+          <SubmitButton />
+        </form>
+      );
+    case "LOADING":
+      return <Typography>Loading</Typography>;
+    case "ERROR":
+      return <Typography>Error</Typography>;
+    case "SUCCESS":
+      return <Typography>Success</Typography>;
+  }
 };
 
 export default Form;
