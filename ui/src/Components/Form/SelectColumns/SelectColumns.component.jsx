@@ -14,7 +14,9 @@ const SelectColumns = ({ columns, register, setValue }) => {
       <InputLabel color="primary">Profile URL column</InputLabel>
       <Select
         name="column"
-        onChange={(e) => setValue("column", e.target.value)}
+        onChange={(e) => {
+          setValue("column", e.target.value);
+        }}
         color="primary"
         fullWidth
       >

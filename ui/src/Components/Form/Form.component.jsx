@@ -7,7 +7,7 @@ import useStyles from "./Form.style";
 import { Typography } from "@material-ui/core";
 
 const Form = ({ csvParser, columns, onSubmit, status }) => {
-  const { register, errors, handleSubmit, setValue, reset } = useForm();
+  const { register, errors, handleSubmit, setValue } = useForm();
   const classes = useStyles();
 
   const handleChange = (e) => {
@@ -16,15 +16,15 @@ const Form = ({ csvParser, columns, onSubmit, status }) => {
   };
 
   switch (status) {
-    case "PENDING":
+    case "LOADING":
+      return <Typography>Loading</Typography>;
+    case "ERROR":
+      return <Typography>Error</Typography>;
+    case "SUCCESS":
+      return <Typography>Success</Typography>;
+    default:
       return (
-        <form
-          onSubmit={handleSubmit(() => {
-            onSubmit();
-            reset();
-          })}
-          className={classes.form}
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
           <UploadButton onUpload={(e) => handleChange(e)} />
           <SelectColumns
             columns={columns}
@@ -35,12 +35,6 @@ const Form = ({ csvParser, columns, onSubmit, status }) => {
           <SubmitButton />
         </form>
       );
-    case "LOADING":
-      return <Typography>Loading</Typography>;
-    case "ERROR":
-      return <Typography>Error</Typography>;
-    case "SUCCESS":
-      return <Typography>Success</Typography>;
   }
 };
 

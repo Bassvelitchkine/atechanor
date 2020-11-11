@@ -3,7 +3,11 @@ import Form from "./Form.component";
 import Papa from "papaparse";
 import axios from "axios";
 import { connect } from "react-redux";
-import { displayError, displaySucess } from "../../Modules/actions";
+import {
+  displayError,
+  displayLoader,
+  displaySucess,
+} from "../../Modules/actions";
 
 // UTILS
 const arrayColumnSelection = (array, columnName) => {
@@ -46,10 +50,7 @@ class FormContainer extends React.Component {
       data: res,
     })
       .then((response) => {
-        {
-          console.log("Successful submission");
-          this.props.handleSuccess();
-        }
+        this.props.handleSuccess();
       })
       .catch((err) => {
         console.log(err);
