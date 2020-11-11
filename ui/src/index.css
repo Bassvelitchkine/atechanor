@@ -1,0 +1,33 @@
+@font-face {
+  font-family: "Goldman";
+  font-style: normal;
+  font-weight: 700;
+  src: url("./Fonts/goldman-v1-latin-700.eot"); /* IE9 Compat Modes */
+  src: local("Goldman Bold"), local("Goldman-Bold"),
+    url("./Fonts/goldman-v1-latin-700.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */ url("./Fonts/goldman-v1-latin-700.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("./Fonts/goldman-v1-latin-700.woff")
+      format("woff"),
+    /* Modern Browsers */ url("./Fonts/goldman-v1-latin-700.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */ url("./Fonts/goldman-v1-latin-700.svg#Goldman")
+      format("svg"); /* Legacy iOS */
+}
+
+/* recursive-500 - latin */
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./Fonts/recursive-v21-latin-500.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("./Fonts/recursive-v21-latin-500.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("./Fonts/recursive-v21-latin-500.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("./Fonts/recursive-v21-latin-500.woff")
+      format("woff"),
+    /* Modern Browsers */ url("./Fonts/recursive-v21-latin-500.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("./Fonts/recursive-v21-latin-500.svg#Recursive") format("svg"); /* Legacy iOS */
+}

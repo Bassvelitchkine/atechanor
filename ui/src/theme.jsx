@@ -13,7 +13,19 @@ const theme = createMuiTheme({
       default: "#303030",
     },
     type: "dark",
+    text: { primary: "#ffffff", secondary: "rgba(255, 255, 255, 0.7)" },
+  },
+  typography: {
+    fontFamily: '"Recursive", sans-serif',
+    h3: {
+      fontFamily: "'Goldman', sans-serif",
+      fontWeight: 300,
+      fontSize: "4rem",
+      lineHeight: 1.167,
+      letterSpacing: "-0.01562em",
+    },
   },
 });
 
 export default theme;
+// '"Recursive"',

@@ -12,6 +12,7 @@ const useStyles = makeStyles({
     padding: "0 30px",
     marginTop: 80,
     fontSize: "1.7em",
+    fontFamily: "Goldman",
   },
 });
 

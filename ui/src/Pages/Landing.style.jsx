@@ -7,10 +7,13 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    // height: "100vh",
-    // width: "140vw",
     padding: 0,
     margin: 0,
+    maxWidth: "none",
+  },
+  typo: {
+    width: "40%",
+    marginTop: 20,
   },
 });
 
