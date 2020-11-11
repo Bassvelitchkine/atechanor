@@ -26,6 +26,8 @@
 /ui/yarn-debug.log*
 /ui/yarn-error.log*
 
+/ui/debug.log
+
 ## API
 /api/env
 api/__pycache__

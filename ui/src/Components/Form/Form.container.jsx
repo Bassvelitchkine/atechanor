@@ -64,7 +64,6 @@ class FormContainer extends React.Component {
         csvParser={(file) => this.handleCsvParsing(file)}
         columns={this.state.columns}
         onSubmit={(data) => this.onSubmit(data)}
-        status={this.props.status}
       />
     );
   }
@@ -85,10 +84,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = (state) => {
-  return {
-    status: state.status,
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(FormContainer);
+export default connect(null, mapDispatchToProps)(FormContainer);

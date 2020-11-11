@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Landing from './Pages/Landing.component';
+import LandingContainer from './Pages/Landing.container';
 import theme from './theme'
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
@@ -30,7 +30,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
     <ThemeProvider theme={theme}>
-    <Landing />
+    <LandingContainer />
     </ThemeProvider>
     </Provider>
   </React.StrictMode>,
