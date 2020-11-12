@@ -36,26 +36,29 @@ class FormContainer extends React.Component {
   onSubmit = (formData) => {
     // Display the loader
     this.props.handleLoader();
+
     // Prepare the data
     const profilesList = arrayColumnSelection(this.state.data, formData.column);
     const email = formData.email;
     const res = { email, profilesList };
 
-    axios({
-      method: "post",
-      url: "http://192.168.99.100:5000/submit",
-      headers: {
-        "Access-Control-Allow-Origin": true,
-      },
-      data: res,
-    })
-      .then((response) => {
-        this.props.handleSuccess();
+    setTimeout(() => {
+      axios({
+        method: "post",
+        url: "http://192.168.99.100:5000/submit",
+        headers: {
+          "Access-Control-Allow-Origin": true,
+        },
+        data: res,
       })
-      .catch((err) => {
-        console.log(err);
-        this.props.handleError();
-      });
+        .then((response) => {
+          this.props.handleSuccess();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.props.handleError();
+        });
+    }, 1000);
   };
 
   render() {

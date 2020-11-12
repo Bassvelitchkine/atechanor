@@ -10,10 +10,15 @@ const useStyles = makeStyles({
     padding: 0,
     margin: 0,
     maxWidth: "none",
+    height: "100vh",
   },
   typo: {
     width: "40%",
     marginTop: 20,
+  },
+  message: {
+    with: "60%",
+    textAlign: "center",
   },
 });
 

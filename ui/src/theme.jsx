@@ -20,7 +20,7 @@ const theme = createMuiTheme({
     h3: {
       fontFamily: "'Goldman', sans-serif",
       fontWeight: 300,
-      fontSize: "4rem",
+      fontSize: "2rem",
       lineHeight: 1.167,
       letterSpacing: "-0.01562em",
     },
