@@ -32,3 +32,4 @@
 /api/env
 api/__pycache__
 api/test*
+api/.env

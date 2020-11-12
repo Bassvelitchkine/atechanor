@@ -8,6 +8,15 @@ from emailScraper import emailScraper
 import redis
 from flask_mail import Mail, Message
 from flask_cors import CORS
+import os
+
+# Environment
+if os.environ['ENV'] = 'development':
+    app.config.from_object('config.DevelopmentConfig')
+    print("\n DEVELOPMENT ENVIRONMENT \n")
+if os.environ['ENV'] = 'production':
+    app.config.from_object('config.DevelopmentConfig')
+    print("\n PRODUCTION ENVIRONMENT \n")
 
 # Database connection
 dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
@@ -19,12 +28,6 @@ app = Flask(__name__)
 # CORS policies
 cors = CORS(app)
 # Flask mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'bastien.velitchkine@gmail.com'
-app.config['MAIL_PASSWORD'] = 'gymnastique'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
 
@@ -87,7 +90,7 @@ def updateProfileEmail():
     for initiator in initiatorStatisfied:
         msg = Message('Your export is ready',
                       sender='bastien.velitchkine@gmail.com', recipients=[initiator[0]])
-        msg.body = "http://192.168.99.100:5000/download/" + \
+        msg.body = app.config['DOWNLOAD_DOMAIN'] + ":5000/download/" + \
             initiator[1]  # We add the download link
         mail.send(msg)
 
