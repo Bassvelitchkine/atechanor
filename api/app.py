@@ -10,11 +10,13 @@ from flask_mail import Mail, Message
 from flask_cors import CORS
 import os
 
+# Flask app
+app = Flask(__name__)
 # Environment
-if os.environ['ENV'] = 'development':
+if os.environ['ENV'] == 'development':
     app.config.from_object('config.DevelopmentConfig')
     print("\n DEVELOPMENT ENVIRONMENT \n")
-if os.environ['ENV'] = 'production':
+if os.environ['ENV'] == 'production':
     app.config.from_object('config.DevelopmentConfig')
     print("\n PRODUCTION ENVIRONMENT \n")
 
@@ -23,8 +25,6 @@ dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
 # Reddis and queue
 conn = redis.from_url("redis://redis:6379")
 q = Queue(connection=conn, default_timeout=1000)
-# Flask app
-app = Flask(__name__)
 # CORS policies
 cors = CORS(app)
 # Flask mail
