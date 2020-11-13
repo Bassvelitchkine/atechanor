@@ -17,7 +17,7 @@ if os.environ['ENV'] == 'development':
     app.config.from_object('config.DevelopmentConfig')
     print("\n DEVELOPMENT ENVIRONMENT \n")
 if os.environ['ENV'] == 'production':
-    app.config.from_object('config.DevelopmentConfig')
+    app.config.from_object('config.ProductionConfig')
     print("\n PRODUCTION ENVIRONMENT \n")
 
 # Database connection

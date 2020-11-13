@@ -1,15 +1,13 @@
 import React, { Fragment } from "react";
-import useStyles from "./Loader.style";
 import "./Loader.css";
 
 const Loader = () => {
-  const classes = useStyles();
   return (
-    <Fragment style={classes.loader}>
-      <div class="cont">
-        <div class="paper"></div>
+    <Fragment>
+      <div className="cont">
+        <div className="paper"></div>
         <button>
-          <div class="loader">
+          <div className="loader">
             <div></div>
             <div></div>
             <div></div>
@@ -19,15 +17,15 @@ const Loader = () => {
           </div>
           Loading
         </button>
-        <div class="g-cont">
-          <div class="garbage"></div>
-          <div class="garbage"></div>
-          <div class="garbage"></div>
-          <div class="garbage"></div>
-          <div class="garbage"></div>
-          <div class="garbage"></div>
-          <div class="garbage"></div>
-          <div class="garbage"></div>
+        <div className="g-cont">
+          <div className="garbage"></div>
+          <div className="garbage"></div>
+          <div className="garbage"></div>
+          <div className="garbage"></div>
+          <div className="garbage"></div>
+          <div className="garbage"></div>
+          <div className="garbage"></div>
+          <div className="garbage"></div>
         </div>
       </div>
     </Fragment>
