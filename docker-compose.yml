@@ -2,6 +2,9 @@ version: "3.7"
 
 services:
   web:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     image: backend
     ports:
       - 5000:5005
@@ -18,6 +21,9 @@ services:
       - redis
 
   ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
     image: frontend
     ports:
       - 3000:3000

@@ -45,7 +45,7 @@ class FormContainer extends React.Component {
     setTimeout(() => {
       axios({
         method: "post",
-        url: "http://192.168.99.100:5000/submit",
+        url: `${process.env.REACT_APP_URL}:5000/submit`,
         headers: {
           "Access-Control-Allow-Origin": true,
         },

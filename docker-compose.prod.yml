@@ -2,7 +2,10 @@ version: "3.7"
 
 services:
   web:
-    image: backend
+    build:
+      context: ./api
+      dockerfile: Dockerfile.prod
+    image: backend_prod
     ports:
       - 5000:5005
     command: python app.py
@@ -11,7 +14,7 @@ services:
       - redis
 
   worker:
-    image: backend
+    image: backend_prod
     command: python worker.py
     restart: always
     depends_on:
@@ -19,7 +22,7 @@ services:
 
   ui:
     build:
-      contex: ./ui
+      context: ./ui
       dockerfile: Dockerfile.prod
     ports:
       - 3000:80
