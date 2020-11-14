@@ -19,6 +19,7 @@ services:
     restart: always
     depends_on:
       - redis
+      - web
 
   ui:
     build:

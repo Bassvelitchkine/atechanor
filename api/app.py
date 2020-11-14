@@ -20,6 +20,8 @@ if os.environ['ENV'] == 'production':
     app.config.from_object('config.ProductionConfig')
     print("\n PRODUCTION ENVIRONMENT \n")
 
+print(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
+
 # Database connection
 dbManager = DataBaseManager('database/database.db', 'database/schemas.sql')
 # Reddis and queue
