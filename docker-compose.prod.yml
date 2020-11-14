@@ -6,8 +6,6 @@ services:
       context: ./api
       dockerfile: Dockerfile.prod
     image: backend_prod
-    volumes:
-      - /api/database/database.db:/api/database/database.db
     ports:
       - 5000:5005
     command: python app.py
@@ -35,6 +33,3 @@ services:
 
   redis:
     image: redis:5.0.7-alpine
-
-volumes:
-  database:
