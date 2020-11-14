@@ -18,4 +18,4 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    DOWNLOAD_DOMAIN = "http://192.168.99.100"
+    DOWNLOAD_DOMAIN = "http://206.81.26.86"
