@@ -44,7 +44,7 @@ def emailScraper(url):
 
     soup = BeautifulSoup(requests.get(url).text, "html.parser")
     githubName = soup.find(href=githubLink)
-    emails = None
+    emails = []
 
     if githubName:
         githubPayload = parsePayload(

@@ -59,7 +59,6 @@ def submitRequest():
             for profileUrl in profilesToScrape:
                 job = q.enqueue_call(
                     func=emailScraper, args=(profileUrl,), result_ttl=5000)
-                print("\n Job id: " + job.get_id() + "\n")
 
             return "OK"
 
@@ -85,7 +84,7 @@ def updateProfileEmail():
 
     # Let's update first the profile whose email was eventually found
     dbManager.updateProfileEmail(profileUrl, emails)
-
+    print("\n Following profile updated in database: \n", profileUrl)
     # Let's update requests that have said profile in their request
     initiatorStatisfied = dbManager.updateRequestStatus(profileUrl)
 

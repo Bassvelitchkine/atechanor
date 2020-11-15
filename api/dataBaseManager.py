@@ -100,7 +100,6 @@ class DataBaseManager():
             data = (email, )
             self.connection.execute(sql, data)
             self.connection.commit()
-            print("Initiator successfully created \n")
 
     def addRequest(self, initiatorId, profileList, nbProfilesToScrape):
         """
@@ -143,7 +142,6 @@ class DataBaseManager():
                 email = [dict(elem) for elem in res][0]['email']
                 if not email:
                     nbProfilesToProcess += 1
-                print("\n Profile already in database \n")
 
         self.connection.commit()
         return profilesToScrape, nbProfilesToProcess
