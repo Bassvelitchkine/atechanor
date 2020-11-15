@@ -14,7 +14,10 @@ const arrayColumnSelection = (array, columnName) => {
   const header = array[0];
   const index = header.findIndex((elem) => elem === columnName);
 
-  const res = array.slice(1).map((elem) => elem[index]);
+  const res = array
+    .slice(1)
+    .map((elem) => elem[index])
+    .filter((elem) => elem !== undefined); // Remove empty profile urls
   return res;
 };
 
@@ -41,6 +44,8 @@ class FormContainer extends React.Component {
     const profilesList = arrayColumnSelection(this.state.data, formData.column);
     const email = formData.email;
     const res = { email, profilesList };
+
+    console.log(res);
 
     setTimeout(() => {
       axios({

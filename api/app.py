@@ -33,6 +33,7 @@ cors = CORS(app)
 def submitRequest():
     """
     """
+
     if request.method == 'POST':
         email = request.json['email']
         profilesList = request.json['profilesList']
