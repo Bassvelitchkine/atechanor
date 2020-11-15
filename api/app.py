@@ -77,7 +77,11 @@ def updateProfileEmail():
     if the request is ready.
     """
     profileUrl = request.json["profileUrl"]
-    emails = ",".join(request.json["emails"])
+
+    try:
+        emails = ",".join(request.json["emails"])
+    except:
+        emails = ""
 
     # Let's update first the profile whose email was eventually found
     dbManager.updateProfileEmail(profileUrl, emails)
